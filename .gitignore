@@ -1,0 +1,37 @@
+# Visual Studio user/cache files
+.vs/
+*.suo
+*.user
+*.ncb
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.opendb
+ipch/
+
+# Build output directories
+[Dd]ebug/
+[Rr]elease/
+[Bb]uild/
+x64/
+Win32/
+
+# Compiler / linker intermediates
+*.obj
+*.o
+*.pch
+*.idb
+*.pdb
+*.ilk
+*.tlog
+*.lastbuildstate
+*.exp
+*.lib
+*.a
+*.exe
+
+# Local temporary files
+*.log
+*.tmp
+*.cache
+_build_test/
