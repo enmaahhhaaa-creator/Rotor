@@ -121,6 +121,14 @@ static void PrintVec3(const char* label, const float* v)
     printf("%s: [%.3f, %.3f, %.3f]\n", label, v[0], v[1], v[2]);
 }
 
+static int failAndDestroy(RotorContext* context, const char* message)
+{
+    /* 统一输出错误并释放上下文，避免主流程里重复写清理逻辑。 */
+    fprintf(stderr, "%s\n", message);
+    Rotor_DestroyContext(context);
+    return 1;
+}
+
 static void RunScenario(RotorContext* context, int transmissionIdx, int rotorIdx,
     const char* name, const RotorStepInput* stepInput)
 {
@@ -181,44 +189,48 @@ int main(void)
 
     /* 创建旋翼上下文，并准备传动和旋翼的独立配置。 */
     context = Rotor_CreateContext();
+    if(context == 0) {
+        fprintf(stderr, "Failed to create rotor context.\n");
+        return 1;
+    }
     mainTransmissionConfig = BuildMainTransmissionConfig();
     mainRotorConfig = BuildMainRotorConfig();
 
     /* 先创建一套传动系统。 */
     mainTransmissionIdx = Rotor_CreateTransmission(context, &mainTransmissionConfig);
     if(mainTransmissionIdx < 0) {
-        fprintf(stderr, "Failed to create transmission model.\n");
-        Rotor_DestroyContext(context);
-        return 1;
+        return failAndDestroy(context, "Failed to create transmission model.");
     }
 
     /* 再创建一个主旋翼实例。 */
     mainRotorIdx = Rotor_CreateRotor(context, &mainRotorConfig);
     if(mainRotorIdx < 0) {
-        fprintf(stderr, "Failed to create main rotor model.\n");
-        Rotor_DestroyContext(context);
-        return 1;
+        return failAndDestroy(context, "Failed to create main rotor model.");
     }
 
     /* 把主旋翼挂接到这套传动系统上。 */
     if(!Rotor_AttachRotor(context, mainTransmissionIdx, mainRotorIdx)) {
-        fprintf(stderr, "Failed to attach main rotor to transmission.\n");
-        Rotor_DestroyContext(context);
-        return 1;
+        return failAndDestroy(context, "Failed to attach main rotor to transmission.");
     }
 
     /* 构造悬停工况输入，并下发悬停控制量。 */
     hoverStep = BuildBaseStepInput();
     hoverControl = BuildHoverControl();
-    Rotor_SetControl(context, mainRotorIdx, &hoverControl);
+    if(!Rotor_SetControl(context, mainRotorIdx, &hoverControl)) {
+        return failAndDestroy(context, "Failed to set hover control.");
+    }
 
     /* 先重置一次 transmission，确保内部状态从干净初值开始。 */
-    Rotor_ResetTransmission(context, mainTransmissionIdx,
-        mainTransmissionConfig.initial_rel_rpm);
+    if(!Rotor_ResetTransmission(context, mainTransmissionIdx,
+        mainTransmissionConfig.initial_rel_rpm)) {
+        return failAndDestroy(context, "Failed to reset transmission.");
+    }
 
     /* 跑一段预热步，让旋翼转速和状态收敛到稳定工况。 */
     for(i = 0; i < 120; ++i) {
-        Rotor_StepTransmission(context, mainTransmissionIdx, &hoverStep);
+        if(!Rotor_StepTransmission(context, mainTransmissionIdx, &hoverStep)) {
+            return failAndDestroy(context, "Failed during transmission warm-up.");
+        }
     }
 
     /* 输出悬停场景结果。 */
@@ -229,7 +241,9 @@ int main(void)
     forwardFlightStep.state.v[0] = 25.0f;
     forwardFlightControl = BuildHoverControl();
     forwardFlightControl.cyclic_ele = 0.05f;
-    Rotor_SetControl(context, mainRotorIdx, &forwardFlightControl);
+    if(!Rotor_SetControl(context, mainRotorIdx, &forwardFlightControl)) {
+        return failAndDestroy(context, "Failed to set forward-flight control.");
+    }
 
     /* 输出前飞场景结果。 */
     RunScenario(context, mainTransmissionIdx, mainRotorIdx, "forward_flight",

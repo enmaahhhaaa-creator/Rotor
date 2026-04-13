@@ -81,6 +81,7 @@
 - `Rotor_InitRotorConfig(...)` 和 `Rotor_InitGearConfig(...)` 提供的是“默认初始化模板”，便于你从一组已知起点开始改参数。
 - 这些默认值并不等价于一套完整、已经校准好的真实机型参数。
 - 真正用于求解时，仍然应该像 `RotorDemo/main.c` 一样，把旋翼几何、气动拟合、功率和控制范围参数明确填完整。
+- 对于明显无效的输入，例如 `rpm<=0`、`delta=0`、`pitch_a_deg=0` 或步进输入里出现 `NaN/Inf`，公共 C API 会直接返回失败，而不是继续求解并把输出污染成 `NaN`。
 
 ## transmission 和 rotor 的关系
 

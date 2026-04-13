@@ -109,7 +109,7 @@ typedef struct {
     float dynamic;
     /* 原始 YASim 的 delta-3 耦合系数。单位：无。初始化默认值：0.0（YASim XML 默认值）。 */
     float delta3;
-    /* 原始 YASim 的附加动力学系数 delta。单位：无。初始化默认值：0.0（YASim XML 默认值）。 */
+    /* 原始 YASim 的附加动力学系数 delta。单位：无。初始化默认值：0.0（YASim XML 默认值）。注意：创建 rotor 前应显式给非零值。 */
     float delta;
     /* 旧版 rotorpart 计算里使用的 translift 系数。单位：无。初始化默认值：0.05（YASim XML 默认值）。 */
     float translift;
@@ -166,9 +166,9 @@ typedef struct {
     /* 可选旋翼名称，仅用于调试/诊断。单位：无。初始化默认值：空字符串。 */
     char name[64];
 
-    /* 参考桨距点 A，用于在未显式给空气动力系数时拟合系数。单位：deg。初始化默认值：10.0（YASim XML 默认值）。 */
+    /* 参考桨距点 A，用于在未显式给空气动力系数时拟合系数。单位：deg。初始化默认值：10.0（YASim XML 默认值）。注意：创建 rotor 前不能为 0。 */
     float pitch_a_deg;
-    /* 参考桨距点 B，用于在未显式给空气动力系数时拟合系数。单位：deg。初始化默认值：10.0（YASim XML 默认值）。 */
+    /* 参考桨距点 B，用于在未显式给空气动力系数时拟合系数。单位：deg。初始化默认值：10.0（YASim XML 默认值）。注意：在 no_torque=0 时不能为 0。 */
     float pitch_b_deg;
     /* 点 A 桨距对应的升力，用于系数拟合。单位：lb-force。初始化默认值：3000.0（YASim XML 默认值）。 */
     float force_at_pitch_a_lb;
@@ -321,9 +321,9 @@ typedef struct {
 RotorContext* Rotor_CreateContext(void);
 void Rotor_DestroyContext(RotorContext* context);
 
-/* 用上文记录的默认值填充 RotorConfig。 */
+/* 用上文记录的默认值填充 RotorConfig。注意：这是一份可编辑模板，不是可直接用于所有机型的完整有效配置。 */
 void Rotor_InitRotorConfig(RotorConfig* out_config);
-/* 用上文记录的默认值填充 RotorGearConfig。 */
+/* 用上文记录的默认值填充 RotorGearConfig。注意：这是一份可编辑模板，不是可直接用于所有机型的完整有效配置。 */
 void Rotor_InitGearConfig(RotorGearConfig* out_config);
 /* 填充中性操纵输入，balance=1.0。 */
 void Rotor_InitControlInput(RotorControlInput* out_input);
@@ -334,19 +334,19 @@ void Rotor_InitTransmissionOutput(RotorTransmissionOutput* out_output);
 /* 将 rotor 输出结构清零。 */
 void Rotor_InitOutput(RotorOutput* out_output);
 
-/* 创建一套 transmission，返回 transmission_idx。 */
+/* 创建一套 transmission，返回 transmission_idx。若参数明显无效，则返回 -1。 */
 int Rotor_CreateTransmission(RotorContext* context, const RotorGearConfig* gear_config);
-/* 创建一个独立 rotor，返回 rotor_idx。 */
+/* 创建一个独立 rotor，返回 rotor_idx。若参数明显无效，则返回 -1。 */
 int Rotor_CreateRotor(RotorContext* context, const RotorConfig* rotor_config);
 /* 把一个 rotor 挂接到指定 transmission 上。 */
 int Rotor_AttachRotor(RotorContext* context, int transmission_idx, int rotor_idx);
 int Rotor_GetTransmissionCount(const RotorContext* context);
 int Rotor_GetRotorCount(const RotorContext* context);
-/* 按 rotor_idx 设置单个旋翼控制量。 */
+/* 按 rotor_idx 设置单个旋翼控制量。若输入明显无效，则返回 0。 */
 int Rotor_SetControl(RotorContext* context, int rotor_idx, const RotorControlInput* control);
-/* 重置整个 transmission 的内部动态状态。 */
+/* 重置整个 transmission 的内部动态状态。若 idx 或初始相对转速无效，则返回 0。 */
 int Rotor_ResetTransmission(RotorContext* context, int transmission_idx, float initial_rel_rpm);
-/* 对整个 transmission 统一求解一步。 */
+/* 对整个 transmission 统一求解一步。若步进输入明显无效，则返回 0。 */
 int Rotor_StepTransmission(RotorContext* context, int transmission_idx, const RotorStepInput* input);
 /* 读取 transmission 的总输出。 */
 int Rotor_GetTransmissionOutput(const RotorContext* context, int transmission_idx,

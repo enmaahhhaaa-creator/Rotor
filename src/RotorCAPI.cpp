@@ -1,5 +1,6 @@
 #include "../include/Rotor.h"
 
+#include <float.h>
 #include <cstring>
 #include <string>
 
@@ -62,6 +63,214 @@ std::string GetCString(const char* src)
         return std::string();
     }
     return std::string(src);
+}
+
+bool IsFiniteFloat(float value)
+{
+    return value == value && value >= -FLT_MAX && value <= FLT_MAX;
+}
+
+bool IsFiniteDouble(double value)
+{
+    return value == value && value >= -DBL_MAX && value <= DBL_MAX;
+}
+
+bool HasFiniteFloatArray(const float* values, int count)
+{
+    int i;
+    for(i = 0; i < count; ++i) {
+        if(!IsFiniteFloat(values[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool HasFiniteDoubleArray(const double* values, int count)
+{
+    int i;
+    for(i = 0; i < count; ++i) {
+        if(!IsFiniteDouble(values[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+float AbsFloat(float value)
+{
+    return value < 0.0f ? -value : value;
+}
+
+bool HasUsableDirection(const float* value)
+{
+    double length2;
+    if(!HasFiniteFloatArray(value, 3)) {
+        return false;
+    }
+
+    length2 = (double)value[0] * (double)value[0]
+        + (double)value[1] * (double)value[1]
+        + (double)value[2] * (double)value[2];
+    return length2 > 1e-12;
+}
+
+bool ValidateRotorConfig(const RotorConfig& config)
+{
+#define CHECK_FINITE_FLOAT(value) if(!IsFiniteFloat(value)) return false
+    if(!HasFiniteFloatArray(config.base, 3)
+        || !HasUsableDirection(config.normal)
+        || !HasUsableDirection(config.forward)
+        || !HasFiniteFloatArray(config.tilt_center, 3)) {
+        return false;
+    }
+
+    CHECK_FINITE_FLOAT(config.max_cyclic_ail_deg);
+    CHECK_FINITE_FLOAT(config.max_cyclic_ele_deg);
+    CHECK_FINITE_FLOAT(config.min_cyclic_ail_deg);
+    CHECK_FINITE_FLOAT(config.min_cyclic_ele_deg);
+    CHECK_FINITE_FLOAT(config.max_collective_deg);
+    CHECK_FINITE_FLOAT(config.min_collective_deg);
+    CHECK_FINITE_FLOAT(config.diameter_m);
+    CHECK_FINITE_FLOAT(config.weight_per_blade_lb);
+    CHECK_FINITE_FLOAT(config.num_blades);
+    CHECK_FINITE_FLOAT(config.rel_blade_center);
+    CHECK_FINITE_FLOAT(config.dynamic);
+    CHECK_FINITE_FLOAT(config.delta3);
+    CHECK_FINITE_FLOAT(config.delta);
+    CHECK_FINITE_FLOAT(config.translift);
+    CHECK_FINITE_FLOAT(config.drag_factor);
+    CHECK_FINITE_FLOAT(config.steps_per_second);
+    CHECK_FINITE_FLOAT(config.phi0_rad);
+    CHECK_FINITE_FLOAT(config.rpm);
+    CHECK_FINITE_FLOAT(config.rel_len_flap_hinge);
+    CHECK_FINITE_FLOAT(config.flap0_rad);
+    CHECK_FINITE_FLOAT(config.flapmin_rad);
+    CHECK_FINITE_FLOAT(config.flapmax_rad);
+    CHECK_FINITE_FLOAT(config.flap0_factor);
+    CHECK_FINITE_FLOAT(config.teeter_damp);
+    CHECK_FINITE_FLOAT(config.max_teeter_damp);
+    CHECK_FINITE_FLOAT(config.rel_len_teeter_hinge);
+    CHECK_FINITE_FLOAT(config.balance);
+    CHECK_FINITE_FLOAT(config.min_tilt_yaw_deg);
+    CHECK_FINITE_FLOAT(config.min_tilt_pitch_deg);
+    CHECK_FINITE_FLOAT(config.min_tilt_roll_deg);
+    CHECK_FINITE_FLOAT(config.max_tilt_yaw_deg);
+    CHECK_FINITE_FLOAT(config.max_tilt_pitch_deg);
+    CHECK_FINITE_FLOAT(config.max_tilt_roll_deg);
+    CHECK_FINITE_FLOAT(config.downwash_factor);
+    CHECK_FINITE_FLOAT(config.pitch_a_deg);
+    CHECK_FINITE_FLOAT(config.pitch_b_deg);
+    CHECK_FINITE_FLOAT(config.force_at_pitch_a_lb);
+    CHECK_FINITE_FLOAT(config.power_at_pitch_0_kw);
+    CHECK_FINITE_FLOAT(config.power_at_pitch_b_kw);
+    CHECK_FINITE_FLOAT(config.translift_ve);
+    CHECK_FINITE_FLOAT(config.translift_maxfactor);
+    CHECK_FINITE_FLOAT(config.ground_effect_constant);
+    CHECK_FINITE_FLOAT(config.vortex_state_lift_factor);
+    CHECK_FINITE_FLOAT(config.vortex_state_c1);
+    CHECK_FINITE_FLOAT(config.vortex_state_c2);
+    CHECK_FINITE_FLOAT(config.vortex_state_c3);
+    CHECK_FINITE_FLOAT(config.vortex_state_e1);
+    CHECK_FINITE_FLOAT(config.vortex_state_e2);
+    CHECK_FINITE_FLOAT(config.twist_deg);
+    CHECK_FINITE_FLOAT(config.number_of_segments);
+    CHECK_FINITE_FLOAT(config.number_of_parts);
+    CHECK_FINITE_FLOAT(config.rel_len_where_incidence_is_measured);
+    CHECK_FINITE_FLOAT(config.chord);
+    CHECK_FINITE_FLOAT(config.taper);
+    CHECK_FINITE_FLOAT(config.airfoil_incidence_no_lift_deg);
+    CHECK_FINITE_FLOAT(config.rel_len_blade_start);
+    CHECK_FINITE_FLOAT(config.incidence_stall_zero_speed_deg);
+    CHECK_FINITE_FLOAT(config.incidence_stall_half_sonic_speed_deg);
+    CHECK_FINITE_FLOAT(config.lift_factor_stall);
+    CHECK_FINITE_FLOAT(config.stall_change_over_deg);
+    CHECK_FINITE_FLOAT(config.drag_factor_stall);
+    CHECK_FINITE_FLOAT(config.airfoil_lift_coefficient);
+    CHECK_FINITE_FLOAT(config.airfoil_drag_coefficient0);
+    CHECK_FINITE_FLOAT(config.airfoil_drag_coefficient1);
+    CHECK_FINITE_FLOAT(config.cyclic_factor);
+    CHECK_FINITE_FLOAT(config.rotor_correction_factor);
+
+    if(config.diameter_m <= 0.0f
+        || config.weight_per_blade_lb <= 0.0f
+        || config.num_blades <= 0.0f
+        || config.rel_blade_center <= 0.0f
+        || config.steps_per_second <= 0.0f
+        || config.rpm <= 0.0f
+        || AbsFloat(config.pitch_a_deg) <= 1e-6f
+        || AbsFloat(config.delta) <= 1e-6f
+        || config.number_of_segments <= 0.0f
+        || config.number_of_parts <= 0.0f
+        || config.chord <= 0.0f
+        || config.rel_len_flap_hinge <= -1.0f
+        || config.rel_len_flap_hinge >= 1.0f) {
+        return false;
+    }
+
+    if(!config.no_torque && AbsFloat(config.pitch_b_deg) <= 1e-6f) {
+        return false;
+    }
+
+    return true;
+#undef CHECK_FINITE_FLOAT
+}
+
+bool ValidateGearConfig(const RotorGearConfig& config)
+{
+    if(!IsFiniteFloat(config.max_power_engine_kw)
+        || !IsFiniteFloat(config.engine_prop_factor)
+        || !IsFiniteFloat(config.yasim_drag_factor)
+        || !IsFiniteFloat(config.yasim_lift_factor)
+        || !IsFiniteFloat(config.max_power_rotor_brake_kw)
+        || !IsFiniteFloat(config.rotorgear_friction_kw)
+        || !IsFiniteFloat(config.engine_accel_limit)
+        || !IsFiniteFloat(config.initial_rel_rpm)) {
+        return false;
+    }
+
+    if(config.max_power_engine_kw < 0.0f
+        || AbsFloat(config.engine_prop_factor) <= 1e-6f
+        || config.max_power_rotor_brake_kw < 0.0f
+        || config.rotorgear_friction_kw < 0.0f) {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateControlInput(const RotorControlInput& control)
+{
+    return IsFiniteFloat(control.collective)
+        && IsFiniteFloat(control.cyclic_ail)
+        && IsFiniteFloat(control.cyclic_ele)
+        && IsFiniteFloat(control.tilt_roll)
+        && IsFiniteFloat(control.tilt_pitch)
+        && IsFiniteFloat(control.tilt_yaw)
+        && IsFiniteFloat(control.balance);
+}
+
+bool ValidateStepInput(const RotorStepInput& input)
+{
+    if(!HasFiniteDoubleArray(input.state.pos, 3)
+        || !HasFiniteFloatArray(input.state.orient, 9)
+        || !HasFiniteFloatArray(input.state.v, 3)
+        || !HasFiniteFloatArray(input.state.rot, 3)
+        || !HasFiniteFloatArray(input.wind_global, 3)
+        || !HasFiniteFloatArray(input.cg_local, 3)
+        || !IsFiniteFloat(input.dt)
+        || !IsFiniteFloat(input.rho)
+        || !IsFiniteFloat(input.rotor_brake)
+        || !IsFiniteFloat(input.max_rel_torque)
+        || !IsFiniteFloat(input.rel_target)) {
+        return false;
+    }
+
+    if(input.dt <= 0.0f || input.rho < 0.0f) {
+        return false;
+    }
+
+    return true;
 }
 
 void ToCpp(const RotorControlInput& c_in, rotor::RotorControlInput& cpp_out)
@@ -424,7 +633,7 @@ void Rotor_InitOutput(RotorOutput* out_output)
 
 int Rotor_CreateTransmission(RotorContext* context, const RotorGearConfig* gear_config)
 {
-    if(context == 0 || gear_config == 0) {
+    if(context == 0 || gear_config == 0 || !ValidateGearConfig(*gear_config)) {
         return -1;
     }
     rotor::RotorGearConfig cpp_config;
@@ -434,7 +643,7 @@ int Rotor_CreateTransmission(RotorContext* context, const RotorGearConfig* gear_
 
 int Rotor_CreateRotor(RotorContext* context, const RotorConfig* rotor_config)
 {
-    if(context == 0 || rotor_config == 0) {
+    if(context == 0 || rotor_config == 0 || !ValidateRotorConfig(*rotor_config)) {
         return -1;
     }
     rotor::RotorConfig cpp_config;
@@ -468,7 +677,7 @@ int Rotor_GetRotorCount(const RotorContext* context)
 
 int Rotor_SetControl(RotorContext* context, int rotor_idx, const RotorControlInput* control)
 {
-    if(context == 0 || control == 0) {
+    if(context == 0 || control == 0 || !ValidateControlInput(*control)) {
         return 0;
     }
     rotor::RotorControlInput cpp_control;
@@ -478,7 +687,7 @@ int Rotor_SetControl(RotorContext* context, int rotor_idx, const RotorControlInp
 
 int Rotor_ResetTransmission(RotorContext* context, int transmission_idx, float initial_rel_rpm)
 {
-    if(context == 0) {
+    if(context == 0 || !IsFiniteFloat(initial_rel_rpm)) {
         return 0;
     }
     return context->impl.manager.ResetTransmission(transmission_idx, initial_rel_rpm) ? 1 : 0;
@@ -486,7 +695,7 @@ int Rotor_ResetTransmission(RotorContext* context, int transmission_idx, float i
 
 int Rotor_StepTransmission(RotorContext* context, int transmission_idx, const RotorStepInput* input)
 {
-    if(context == 0 || input == 0) {
+    if(context == 0 || input == 0 || !ValidateStepInput(*input)) {
         return 0;
     }
 
