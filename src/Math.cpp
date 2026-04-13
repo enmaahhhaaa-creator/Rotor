@@ -158,8 +158,15 @@ float Math::mag3(float* v)
 
 void Math::unit3(float* v, float* out)
 {
-    float imag = 1/mag3(v);
-    mul3(imag, v, out);
+    float mag = mag3(v);
+    if(mag <= 1e-12f) {
+        out[0] = 0.0f;
+        out[1] = 0.0f;
+        out[2] = 0.0f;
+        return;
+    }
+
+    mul3(1.0f / mag, v, out);
 }
 
 void Math::cross3(float* a, float* b, float* out)

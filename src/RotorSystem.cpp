@@ -371,7 +371,8 @@ class RotorSystem::Impl {
 public:
     Impl()
         : initialized(false),
-          initial_rel_rpm(1.0f)
+          initial_rel_rpm(1.0f),
+          has_config(false)
     {
     }
 
@@ -379,6 +380,8 @@ public:
     std::vector<yasim::Rotor*> rotors;
     bool initialized;
     float initial_rel_rpm;
+    RotorSystemConfig config;
+    bool has_config;
 };
 
 RotorSystem::RotorSystem()
@@ -395,6 +398,8 @@ bool RotorSystem::Initialize(const RotorSystemConfig& config)
 {
     delete _impl;
     _impl = new Impl();
+    _impl->config = config;
+    _impl->has_config = true;
 
     _impl->gear.setParameter((char*)"max_power_engine", config.gear.max_power_engine_kw);
     _impl->gear.setParameter((char*)"engine_prop_factor", config.gear.engine_prop_factor);
@@ -418,17 +423,22 @@ bool RotorSystem::Initialize(const RotorSystemConfig& config)
     }
 
     _impl->gear.compile();
-    Reset(_impl->initial_rel_rpm);
+    if(!_impl->rotors.empty()) {
+        _impl->rotors[0]->setOmegaRelNeu(_impl->initial_rel_rpm);
+    }
     _impl->initialized = true;
     return true;
 }
 
 void RotorSystem::Reset(float initial_rel_rpm)
 {
-    _impl->initial_rel_rpm = initial_rel_rpm;
-    if(!_impl->rotors.empty()) {
-        _impl->rotors[0]->setOmegaRelNeu(initial_rel_rpm);
+    if(!_impl->has_config) {
+        return;
     }
+
+    RotorSystemConfig reset_config = _impl->config;
+    reset_config.gear.initial_rel_rpm = initial_rel_rpm;
+    Initialize(reset_config);
 }
 
 bool RotorSystem::Step(const StepInput& input, StepOutput& output)

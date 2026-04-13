@@ -35,3 +35,4 @@ Win32/
 *.tmp
 *.cache
 _build_test/
+_build_smoke/

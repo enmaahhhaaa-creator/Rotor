@@ -266,18 +266,6 @@ void ToC(const rotor::RotorGearConfig& cpp_in, RotorGearConfig& c_out)
     c_out.initial_rel_rpm = cpp_in.initial_rel_rpm;
 }
 
-void ToCpp(const RotorCreateInput& c_in, rotor::RotorCreateInput& cpp_out)
-{
-    ToCpp(c_in.rotor, cpp_out.rotor);
-    ToCpp(c_in.gear, cpp_out.gear);
-}
-
-void ToC(const rotor::RotorCreateInput& cpp_in, RotorCreateInput& c_out)
-{
-    ToC(cpp_in.rotor, c_out.rotor);
-    ToC(cpp_in.gear, c_out.gear);
-}
-
 void ToCpp(const RotorState& c_in, yasim::State& cpp_out)
 {
     Copy3d(c_in.pos, cpp_out.pos);
@@ -311,6 +299,14 @@ void ToCpp(const RotorStepInput& c_in, rotor::RotorInstanceInput& cpp_out)
     cpp_out.rotor_brake = c_in.rotor_brake;
     cpp_out.max_rel_torque = c_in.max_rel_torque;
     cpp_out.rel_target = c_in.rel_target;
+}
+
+void ToC(const rotor::RotorTransmissionOutput& cpp_in, RotorTransmissionOutput& c_out)
+{
+    Copy3(cpp_in.total_force, c_out.total_force);
+    Copy3(cpp_in.total_moment, c_out.total_moment);
+    Copy3(cpp_in.gear_torque, c_out.gear_torque);
+    c_out.engine_torque = cpp_in.engine_torque;
 }
 
 void ToC(const rotor::RotorInstanceOutput& cpp_in, RotorOutput& c_out)
@@ -359,13 +355,22 @@ void Rotor_DestroyContext(RotorContext* context)
     delete context;
 }
 
-void Rotor_InitCreateInput(RotorCreateInput* out_input)
+void Rotor_InitRotorConfig(RotorConfig* out_config)
 {
-    if(out_input == 0) {
+    if(out_config == 0) {
         return;
     }
-    rotor::RotorCreateInput cpp_default;
-    ToC(cpp_default, *out_input);
+    rotor::RotorConfig cpp_default;
+    ToC(cpp_default, *out_config);
+}
+
+void Rotor_InitGearConfig(RotorGearConfig* out_config)
+{
+    if(out_config == 0) {
+        return;
+    }
+    rotor::RotorGearConfig cpp_default;
+    ToC(cpp_default, *out_config);
 }
 
 void Rotor_InitControlInput(RotorControlInput* out_input)
@@ -401,6 +406,14 @@ void Rotor_InitStepInput(RotorStepInput* out_input)
     out_input->ground_provider.user_data = 0;
 }
 
+void Rotor_InitTransmissionOutput(RotorTransmissionOutput* out_output)
+{
+    if(out_output == 0) {
+        return;
+    }
+    std::memset(out_output, 0, sizeof(*out_output));
+}
+
 void Rotor_InitOutput(RotorOutput* out_output)
 {
     if(out_output == 0) {
@@ -409,17 +422,43 @@ void Rotor_InitOutput(RotorOutput* out_output)
     std::memset(out_output, 0, sizeof(*out_output));
 }
 
-int Rotor_CreateRotor(RotorContext* context, const RotorCreateInput* create_input)
+int Rotor_CreateTransmission(RotorContext* context, const RotorGearConfig* gear_config)
 {
-    if(context == 0 || create_input == 0) {
+    if(context == 0 || gear_config == 0) {
         return -1;
     }
-    rotor::RotorCreateInput cpp_input;
-    ToCpp(*create_input, cpp_input);
-    return context->impl.manager.CreateRotor(cpp_input);
+    rotor::RotorGearConfig cpp_config;
+    ToCpp(*gear_config, cpp_config);
+    return context->impl.manager.CreateTransmission(cpp_config);
 }
 
-int Rotor_GetCount(const RotorContext* context)
+int Rotor_CreateRotor(RotorContext* context, const RotorConfig* rotor_config)
+{
+    if(context == 0 || rotor_config == 0) {
+        return -1;
+    }
+    rotor::RotorConfig cpp_config;
+    ToCpp(*rotor_config, cpp_config);
+    return context->impl.manager.CreateRotor(cpp_config);
+}
+
+int Rotor_AttachRotor(RotorContext* context, int transmission_idx, int rotor_idx)
+{
+    if(context == 0) {
+        return 0;
+    }
+    return context->impl.manager.AttachRotor(transmission_idx, rotor_idx) ? 1 : 0;
+}
+
+int Rotor_GetTransmissionCount(const RotorContext* context)
+{
+    if(context == 0) {
+        return 0;
+    }
+    return (int)context->impl.manager.GetTransmissionCount();
+}
+
+int Rotor_GetRotorCount(const RotorContext* context)
 {
     if(context == 0) {
         return 0;
@@ -427,25 +466,25 @@ int Rotor_GetCount(const RotorContext* context)
     return (int)context->impl.manager.GetRotorCount();
 }
 
-int Rotor_SetControl(RotorContext* context, int idx, const RotorControlInput* control)
+int Rotor_SetControl(RotorContext* context, int rotor_idx, const RotorControlInput* control)
 {
     if(context == 0 || control == 0) {
         return 0;
     }
     rotor::RotorControlInput cpp_control;
     ToCpp(*control, cpp_control);
-    return context->impl.manager.SetRotorControl(idx, cpp_control) ? 1 : 0;
+    return context->impl.manager.SetRotorControl(rotor_idx, cpp_control) ? 1 : 0;
 }
 
-int Rotor_Reset(RotorContext* context, int idx, float initial_rel_rpm)
+int Rotor_ResetTransmission(RotorContext* context, int transmission_idx, float initial_rel_rpm)
 {
     if(context == 0) {
         return 0;
     }
-    return context->impl.manager.ResetRotor(idx, initial_rel_rpm) ? 1 : 0;
+    return context->impl.manager.ResetTransmission(transmission_idx, initial_rel_rpm) ? 1 : 0;
 }
 
-int Rotor_Step(RotorContext* context, int idx, const RotorStepInput* input)
+int Rotor_StepTransmission(RotorContext* context, int transmission_idx, const RotorStepInput* input)
 {
     if(context == 0 || input == 0) {
         return 0;
@@ -461,17 +500,32 @@ int Rotor_Step(RotorContext* context, int idx, const RotorStepInput* input)
         cpp_input.ground_provider = 0;
     }
 
-    return context->impl.manager.StepRotor(idx, cpp_input) ? 1 : 0;
+    return context->impl.manager.StepTransmission(transmission_idx, cpp_input) ? 1 : 0;
 }
 
-int Rotor_GetOutput(const RotorContext* context, int idx, RotorOutput* output)
+int Rotor_GetTransmissionOutput(const RotorContext* context, int transmission_idx,
+    RotorTransmissionOutput* output)
+{
+    if(context == 0 || output == 0) {
+        return 0;
+    }
+
+    rotor::RotorTransmissionOutput cpp_output;
+    if(!context->impl.manager.GetTransmissionOutput(transmission_idx, cpp_output)) {
+        return 0;
+    }
+    ToC(cpp_output, *output);
+    return 1;
+}
+
+int Rotor_GetRotorOutput(const RotorContext* context, int rotor_idx, RotorOutput* output)
 {
     if(context == 0 || output == 0) {
         return 0;
     }
 
     rotor::RotorInstanceOutput cpp_output;
-    if(!context->impl.manager.GetRotorOutput(idx, cpp_output)) {
+    if(!context->impl.manager.GetRotorOutput(rotor_idx, cpp_output)) {
         return 0;
     }
     ToC(cpp_output, *output);

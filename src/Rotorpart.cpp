@@ -423,9 +423,14 @@ float Rotorpart::calculateAlpha(float* v_rel_air, float rho,
 
         //split into direction and magnitude
         v_local_scalar=Math::mag3(v_local);
-        if (v_local_scalar!=0)
+        if (v_local_scalar!=0) {
             //Math::unit3(v_local,v_help);
             Math::mul3(1/v_local_scalar,v_local,v_help);
+        } else {
+            v_help[0] = 0.0f;
+            v_help[1] = 0.0f;
+            v_help[2] = 0.0f;
+        }
         float incidence_of_airspeed = Math::asin(Math::clamp(
             Math::dot3(v_help,_normal),-1,1)) + local_incidence;
         ias = incidence_of_airspeed;

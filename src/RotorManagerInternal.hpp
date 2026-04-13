@@ -7,13 +7,6 @@
 
 namespace rotor {
 
-struct RotorCreateInput {
-    RotorConfig rotor;
-    RotorGearConfig gear;
-
-    RotorCreateInput();
-};
-
 struct RotorInstanceInput {
     yasim::State state;
     float dt;
@@ -25,9 +18,17 @@ struct RotorInstanceInput {
     float max_rel_torque;
     float rel_target;
     const GroundProvider* ground_provider;
-    RotorControlInput control;
 
     RotorInstanceInput();
+};
+
+struct RotorTransmissionOutput {
+    float total_force[3];
+    float total_moment[3];
+    float gear_torque[3];
+    float engine_torque;
+
+    RotorTransmissionOutput();
 };
 
 struct RotorInstanceOutput {
@@ -45,16 +46,20 @@ public:
     RotorManager();
     ~RotorManager();
 
-    int CreateRotor(const RotorCreateInput& create_input);
-    int AddRotor(const RotorConfig& rotor_config, const RotorGearConfig& gear_config);
+    int CreateTransmission(const RotorGearConfig& gear_config);
+    int CreateRotor(const RotorConfig& rotor_config);
     void Clear();
+    std::size_t GetTransmissionCount() const;
     std::size_t GetRotorCount() const;
 
-    bool SetRotorControl(int idx, const RotorControlInput& control);
-    bool ResetRotor(int idx, float initial_rel_rpm);
-    bool StepRotor(int idx, const RotorInstanceInput& input);
-    bool StepRotor(int idx, const RotorInstanceInput& input, RotorInstanceOutput& output);
-    bool GetRotorOutput(int idx, RotorInstanceOutput& output) const;
+    bool AttachRotor(int transmission_idx, int rotor_idx);
+    bool SetRotorControl(int rotor_idx, const RotorControlInput& control);
+    bool ResetTransmission(int transmission_idx, float initial_rel_rpm);
+    bool StepTransmission(int transmission_idx, const RotorInstanceInput& input);
+    bool StepTransmission(int transmission_idx, const RotorInstanceInput& input,
+        RotorTransmissionOutput& output);
+    bool GetTransmissionOutput(int transmission_idx, RotorTransmissionOutput& output) const;
+    bool GetRotorOutput(int rotor_idx, RotorInstanceOutput& output) const;
 
 private:
     RotorManager(const RotorManager&);

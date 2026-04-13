@@ -4,6 +4,13 @@
 /*
  * 抽取后的 YASim 旋翼模型公共 C 接口。
  *
+ * 当前接口按“两层对象”组织：
+ * - transmission：传动/发动机/调速器系统，对应原始 YASim 的一套 rotorgear
+ * - rotor：单个旋翼，对应原始 YASim 的一个 rotor
+ *
+ * 一个 transmission 可以挂接多个 rotor；
+ * 这些 rotor 在 step 时共享同一套传动系统状态。
+ *
  * 本头文件使用的坐标约定：
  * - “local/body”表示机体坐标系，旋翼几何输入和力/力矩输出都在这个坐标系下。
  * - “global”表示世界坐标系，state.pos/state.v/state.rot/wind_global 使用这个坐标系。
@@ -11,7 +18,8 @@
  *   local/body。
  *
  * 下文提到的“初始化默认值”来自以下初始化函数：
- * - Rotor_InitCreateInput
+ * - Rotor_InitRotorConfig
+ * - Rotor_InitGearConfig
  * - Rotor_InitControlInput
  * - Rotor_InitStepInput
  *
@@ -240,16 +248,9 @@ typedef struct {
     float rotorgear_friction_kw;
     /* 发动机驱动的相对转速最大加速度限制。单位：1/s。初始化默认值：0.05（YASim rotorgear/XML 默认值）。 */
     float engine_accel_limit;
-    /* 创建或 Reset 时使用的初始相对转速。单位：相对标称转速比。初始化默认值：1.0。推荐值：已带转状态保持 1.0。 */
+    /* 创建或重置 transmission 时使用的初始相对转速。单位：相对标称转速比。初始化默认值：1.0。 */
     float initial_rel_rpm;
 } RotorGearConfig;
-
-typedef struct {
-    /* 单个旋翼的几何、气动和动力学参数。初始化默认值：Rotor_InitCreateInput 会填充上面的 RotorConfig 默认值。 */
-    RotorConfig rotor;
-    /* 单个旋翼的传动/发动机参数。初始化默认值：Rotor_InitCreateInput 会填充上面的 RotorGearConfig 默认值。 */
-    RotorGearConfig gear;
-} RotorCreateInput;
 
 typedef struct {
     /* 当前步的飞行器运动学状态。初始化默认值：零位置/零速度/零角速度，方向矩阵为单位阵。 */
@@ -294,36 +295,64 @@ typedef struct {
 } RotorResult;
 
 typedef struct {
-    /* 该旋翼实例输出的总力。坐标系：local/body。单位：N。初始化默认值：{0,0,0}。 */
+    /* 该 transmission 输出的总力。坐标系：local/body。单位：N。初始化默认值：{0,0,0}。 */
     float total_force[3];
-    /* 该旋翼实例输出的总力矩，已经包含 gear_torque。坐标系：local/body。单位：N*m。初始化默认值：{0,0,0}。 */
+    /* 该 transmission 输出的总力矩。坐标系：local/body。单位：N*m。初始化默认值：{0,0,0}。 */
     float total_moment[3];
     /* 由传动/刹车/转速变化引入的附加力矩。坐标系：local/body。单位：N*m。初始化默认值：{0,0,0}。 */
     float gear_torque[3];
     /* 等效到发动机轴上的总扭矩。单位：N*m。初始化默认值：0.0。 */
     float engine_torque;
-    /* 当前 idx 对应旋翼的详细输出。初始化默认值：全 0 的 RotorResult。 */
+} RotorTransmissionOutput;
+
+typedef struct {
+    /* 该 rotor 所属 transmission 的总力。坐标系：local/body。单位：N。初始化默认值：{0,0,0}。 */
+    float total_force[3];
+    /* 该 rotor 所属 transmission 的总力矩。坐标系：local/body。单位：N*m。初始化默认值：{0,0,0}。 */
+    float total_moment[3];
+    /* 该 rotor 所属 transmission 的传动附加力矩。坐标系：local/body。单位：N*m。初始化默认值：{0,0,0}。 */
+    float gear_torque[3];
+    /* 该 rotor 所属 transmission 的发动机轴扭矩。单位：N*m。初始化默认值：0.0。 */
+    float engine_torque;
+    /* 当前 rotor 的详细输出。初始化默认值：全 0 的 RotorResult。 */
     RotorResult rotor;
 } RotorOutput;
 
 RotorContext* Rotor_CreateContext(void);
 void Rotor_DestroyContext(RotorContext* context);
 
-/* 用上文记录的默认值填充 create_input。 */
-void Rotor_InitCreateInput(RotorCreateInput* out_input);
+/* 用上文记录的默认值填充 RotorConfig。 */
+void Rotor_InitRotorConfig(RotorConfig* out_config);
+/* 用上文记录的默认值填充 RotorGearConfig。 */
+void Rotor_InitGearConfig(RotorGearConfig* out_config);
 /* 填充中性操纵输入，balance=1.0。 */
 void Rotor_InitControlInput(RotorControlInput* out_input);
 /* 填充零状态、单位阵方向、dt=1/60、rho=1.184、engine_on=1。 */
 void Rotor_InitStepInput(RotorStepInput* out_input);
-/* 将所有输出字段清零。 */
+/* 将 transmission 输出结构清零。 */
+void Rotor_InitTransmissionOutput(RotorTransmissionOutput* out_output);
+/* 将 rotor 输出结构清零。 */
 void Rotor_InitOutput(RotorOutput* out_output);
 
-int Rotor_CreateRotor(RotorContext* context, const RotorCreateInput* create_input);
-int Rotor_GetCount(const RotorContext* context);
-int Rotor_SetControl(RotorContext* context, int idx, const RotorControlInput* control);
-int Rotor_Reset(RotorContext* context, int idx, float initial_rel_rpm);
-int Rotor_Step(RotorContext* context, int idx, const RotorStepInput* input);
-int Rotor_GetOutput(const RotorContext* context, int idx, RotorOutput* output);
+/* 创建一套 transmission，返回 transmission_idx。 */
+int Rotor_CreateTransmission(RotorContext* context, const RotorGearConfig* gear_config);
+/* 创建一个独立 rotor，返回 rotor_idx。 */
+int Rotor_CreateRotor(RotorContext* context, const RotorConfig* rotor_config);
+/* 把一个 rotor 挂接到指定 transmission 上。 */
+int Rotor_AttachRotor(RotorContext* context, int transmission_idx, int rotor_idx);
+int Rotor_GetTransmissionCount(const RotorContext* context);
+int Rotor_GetRotorCount(const RotorContext* context);
+/* 按 rotor_idx 设置单个旋翼控制量。 */
+int Rotor_SetControl(RotorContext* context, int rotor_idx, const RotorControlInput* control);
+/* 重置整个 transmission 的内部动态状态。 */
+int Rotor_ResetTransmission(RotorContext* context, int transmission_idx, float initial_rel_rpm);
+/* 对整个 transmission 统一求解一步。 */
+int Rotor_StepTransmission(RotorContext* context, int transmission_idx, const RotorStepInput* input);
+/* 读取 transmission 的总输出。 */
+int Rotor_GetTransmissionOutput(const RotorContext* context, int transmission_idx,
+    RotorTransmissionOutput* output);
+/* 读取单个 rotor 的输出，同时附带其所属 transmission 的总输出。 */
+int Rotor_GetRotorOutput(const RotorContext* context, int rotor_idx, RotorOutput* output);
 void Rotor_Clear(RotorContext* context);
 
 #ifdef __cplusplus
