@@ -2,7 +2,7 @@
 #include "Glue.hpp"
 namespace yasim {
 
-void Glue::calcAlphaBeta(State* s, float* wind, float* alpha, float* beta)
+void Glue::calcAlphaBeta(const State* s, const float* wind, float* alpha, float* beta)
 {
     // Convert the velocity to the aircraft frame.
     float v[3];
@@ -15,7 +15,7 @@ void Glue::calcAlphaBeta(State* s, float* wind, float* alpha, float* beta)
     *beta = Math::atan2(v[1], v[0]);
 }
 
-void Glue::calcEulerRates(State* s, float* roll, float* pitch, float* hdg)
+void Glue::calcEulerRates(const State* s, float* roll, float* pitch, float* hdg)
 {
     // This one is easy, the projection of the rotation vector around
     // the "up" axis.
@@ -157,7 +157,7 @@ void Glue::geodUp(double lat, double lon, float* up)
 }
 
 // FIXME: Hardcoded WGS84 numbers...
-void Glue::geodUp(double* pos, float* up)
+void Glue::geodUp(const double* pos, float* up)
 {
     const double SQUASH  = 0.9966471893352525192801545;
     const double STRETCH = 1.0033640898209764189003079;
@@ -171,4 +171,3 @@ void Glue::geodUp(double* pos, float* up)
 }
 
 }; // namespace yasim
-

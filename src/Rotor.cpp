@@ -436,7 +436,7 @@ void Rotor::strncpy(char *dest,const char *src,int maxlen)
     dest[n]=0;
 }
 
-void Rotor::setNormal(float* normal)
+void Rotor::setNormal(const float* normal)
 {
     int i;
     float invsum,sqrsum=0;
@@ -451,7 +451,7 @@ void Rotor::setNormal(float* normal)
     }
 }
 
-void Rotor::setForward(float* forward)
+void Rotor::setForward(const float* forward)
 {
     int i;
     float invsum,sqrsum=0;
@@ -488,7 +488,7 @@ void Rotor::setPitchB(float value)
     _pitch_b=value/180*pi; 
 }
 
-void Rotor::setBase(float* base)
+void Rotor::setBase(const float* base)
 {
     int i;
     for(i=0; i<3; i++) _base[i] = base[i];
@@ -794,7 +794,7 @@ void Rotor::getPosition(float* out)
     for(i=0; i<3; i++) out[i] = _base[i];
 }
 
-void Rotor::calcLiftFactor(float* v, float rho, State *s)
+void Rotor::calcLiftFactor(const float* v, float rho, const State *s)
 {
     //calculates _lift_factor, which is a foactor for the lift of the rotor
     //due to
@@ -823,7 +823,7 @@ void Rotor::calcLiftFactor(float* v, float rho, State *s)
     s->velGlobalToLocal(_grav_direction, _grav_direction);
 }
 
-void Rotor::findGroundEffectAltitude(Ground * ground_cb,State *s)
+void Rotor::findGroundEffectAltitude(Ground * ground_cb, const State *s)
 {
     _ground_effect_altitude=findGroundEffectAltitude(ground_cb,s,
         _groundeffectpos[0],_groundeffectpos[1],
@@ -831,7 +831,7 @@ void Rotor::findGroundEffectAltitude(Ground * ground_cb,State *s)
     testForRotorGroundContact(ground_cb,s);
 }
 
-void Rotor::testForRotorGroundContact(Ground * ground_cb,State *s)
+void Rotor::testForRotorGroundContact(Ground * ground_cb, const State *s)
 {
     int i;
     for (i=0;i<_num_ground_contact_pos;i++)
@@ -857,12 +857,13 @@ void Rotor::testForRotorGroundContact(Ground * ground_cb,State *s)
         }
     }
 }
-float Rotor::findGroundEffectAltitude(Ground * ground_cb,State *s,
-        float *pos0,float *pos1,float *pos2,float *pos3,
+float Rotor::findGroundEffectAltitude(Ground * ground_cb, const State *s,
+        const float *pos0,const float *pos1,const float *pos2,const float *pos3,
         int iteration,float a0,float a1,float a2,float a3)
 {
     float a[5];
-    float *p[5],pos4[3];
+    const float *p[5];
+    float pos4[3];
     a[0]=a0;
     a[1]=a1;
     a[2]=a2;
@@ -873,8 +874,8 @@ float Rotor::findGroundEffectAltitude(Ground * ground_cb,State *s,
     p[2]=pos2;
     p[3]=pos3;
     p[4]=pos4;
-    Math::add3(p[0],p[2],p[4]);
-    Math::mul3(0.5,p[4],p[4]);//the center
+    Math::add3(p[0],p[2],pos4);
+    Math::mul3(0.5,pos4,pos4);//the center
     
     float mina=100*_diameter;
     float suma=0;
@@ -950,7 +951,7 @@ float Rotor::findGroundEffectAltitude(Ground * ground_cb,State *s,
         );
 }
 
-void Rotor::getDownWash(float *pos, float *v_heli, float *downwash)
+void Rotor::getDownWash(const float *pos, float *v_heli, float *downwash)
 {
     float pos2rotor[3],tmp[3];
     Math::sub3(_base,pos,pos2rotor);
@@ -1587,7 +1588,6 @@ void Rotorgear::calcForces(float* torqueOut)
             //clamp it to avoid overflow. Should never be reached
             if (omegarel<-.5) omegarel=-.5;
 
-            r0->setOmegaRelNeu(omegarel);
             //calculate the torque, which is needed to accelerate the rotors.
             //Add this additional torque to the body
             for(j=0; j<_rotors.size(); j++) {
@@ -1600,6 +1600,10 @@ void Rotorgear::calcForces(float* torqueOut)
                     Math::add3(torque,torqueOut,torqueOut);
                 }
             }
+        }
+        for(i=0; i<_rotors.size(); i++) {
+            Rotor* r = (Rotor*)_rotors.get(i);
+            r->setOmegaRelNeu(omegarel);
         }
         _total_torque_on_engine=total_torque+_ddt_omegarel*total_torque_of_inertia;
     }
@@ -1620,7 +1624,7 @@ void Rotorgear::compile()
     }
 }
 
-void Rotorgear::getDownWash(float *pos, float * v_heli, float *downwash)
+void Rotorgear::getDownWash(const float *pos, float * v_heli, float *downwash)
 {
     float tmp[3];
     downwash[0]=downwash[1]=downwash[2]=0;

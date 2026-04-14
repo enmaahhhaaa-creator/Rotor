@@ -8,7 +8,7 @@
 
 namespace {
 
-const float kPi = 3.14159f;
+const float kPi = 3.14159265f;
 
 void Zero3(float* v)
 {
@@ -98,9 +98,9 @@ private:
 
 void ApplyRotorConfig(yasim::Rotor* rotor, const rotor::RotorConfig& cfg)
 {
-    rotor->setBase((float*)cfg.base);
-    rotor->setNormal((float*)cfg.normal);
-    rotor->setForward((float*)cfg.forward);
+    rotor->setBase(cfg.base);
+    rotor->setNormal(cfg.normal);
+    rotor->setForward(cfg.forward);
     rotor->setMaxCyclicail(cfg.max_cyclic_ail_deg);
     rotor->setMaxCyclicele(cfg.max_cyclic_ele_deg);
     rotor->setMinCyclicail(cfg.min_cyclic_ail_deg);
@@ -202,9 +202,9 @@ void ComputeLocalWind(const float* pos, const yasim::State& state,
 
     Copy3(wind_global, wind_mut);
     Copy3(cg_local, cg_mut);
-    yasim::Math::vmul33((float*)state.orient, wind_mut, lwind);
-    yasim::Math::vmul33((float*)state.orient, (float*)state.rot, lrot);
-    yasim::Math::vmul33((float*)state.orient, (float*)state.v, lv);
+    yasim::Math::vmul33(state.orient, wind_mut, lwind);
+    yasim::Math::vmul33(state.orient, state.rot, lrot);
+    yasim::Math::vmul33(state.orient, state.v, lv);
 
     PointVelocity(pos, cg_mut, lrot, out);
     yasim::Math::mul3(-1.0f, out, out);
@@ -212,7 +212,7 @@ void ComputeLocalWind(const float* pos, const yasim::State& state,
     yasim::Math::sub3(out, lv, out);
 
     if(!is_rotor && gear != 0 && gear->isInUse()) {
-        gear->getDownWash((float*)pos, lv, tmp);
+        gear->getDownWash(pos, lv, tmp);
         yasim::Math::add3(out, tmp, out);
     }
 }
@@ -424,7 +424,9 @@ bool RotorSystem::Initialize(const RotorSystemConfig& config)
 
     _impl->gear.compile();
     if(!_impl->rotors.empty()) {
-        _impl->rotors[0]->setOmegaRelNeu(_impl->initial_rel_rpm);
+        for(std::size_t i = 0; i < _impl->rotors.size(); ++i) {
+            _impl->rotors[i]->setOmegaRelNeu(_impl->initial_rel_rpm);
+        }
     }
     _impl->initialized = true;
     return true;
@@ -474,7 +476,7 @@ bool RotorSystem::Step(const StepInput& input, StepOutput& output)
     if(input.ground_provider != 0) {
         ProviderGroundAdapter ground(input.ground_provider);
         for(i = 0; i < _impl->rotors.size(); ++i) {
-            _impl->rotors[i]->findGroundEffectAltitude(&ground, (yasim::State*)&input.state);
+            _impl->rotors[i]->findGroundEffectAltitude(&ground, &input.state);
         }
     } else {
         for(i = 0; i < _impl->rotors.size(); ++i) {
@@ -483,7 +485,7 @@ bool RotorSystem::Step(const StepInput& input, StepOutput& output)
     }
 
     float lrot[3];
-    yasim::Math::vmul33((float*)input.state.orient, (float*)input.state.rot, lrot);
+    yasim::Math::vmul33(input.state.orient, input.state.rot, lrot);
     yasim::Math::mul3(input.dt, lrot, lrot);
     _impl->gear.initRotorIteration(lrot, input.dt);
 
@@ -495,7 +497,7 @@ bool RotorSystem::Step(const StepInput& input, StepOutput& output)
         rotor->getPosition(rotor_hub_pos);
         ComputeLocalWind(rotor_hub_pos, input.state, input.wind_global, input.cg_local,
             &_impl->gear, hub_wind, false);
-        rotor->calcLiftFactor(hub_wind, input.rho, (yasim::State*)&input.state);
+        rotor->calcLiftFactor(hub_wind, input.rho, &input.state);
 
         float scalar_total = 0.0f;
         int j;
@@ -525,9 +527,6 @@ bool RotorSystem::Step(const StepInput& input, StepOutput& output)
 
         rotor->setTorque(scalar_total);
         output.rotors[i].scalar_torque = scalar_total;
-        output.rotors[i].omega_rel = rotor->getOmegaRel();
-        output.rotors[i].omega_rel_next = rotor->getOmegaRelNeu();
-        output.rotors[i].rpm = rotor->getOmega() * 60.0f / (2.0f * kPi);
     }
 
     _impl->gear.calcForces(output.gear_torque);

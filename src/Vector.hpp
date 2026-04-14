@@ -16,17 +16,17 @@ public:
     void  set(int i, void* p);
     int   size();
 private:
-    void realloc();
+    void grow();
 
-    int _nelem;
-    int _sz;
+    int _capacity;
+    int _size;
     void** _array;
 };
 
 inline Vector::Vector()
 {
-    _nelem = 0;
-    _sz = 0;
+    _capacity = 0;
+    _size = 0;
     _array = 0;
 }
 
@@ -37,10 +37,10 @@ inline Vector::~Vector()
 
 inline int Vector::add(void* p)
 {
-    if(_nelem == _sz)
-        realloc();
-    _array[_sz] = p;
-    return _sz++;
+    if(_capacity == _size)
+        grow();
+    _array[_size] = p;
+    return _size++;
 }
 
 inline void* Vector::get(int i)
@@ -55,14 +55,14 @@ inline void Vector::set(int i, void* p)
 
 inline int Vector::size()
 {
-    return _sz;
+    return _size;
 }
 
-inline void Vector::realloc()
+inline void Vector::grow()
 {
-    _nelem = 2*_nelem + 1;
-    void** array = new void*[_nelem];
-    for(int i=0; i<_sz; i++)
+    _capacity = 2 * _capacity + 1;
+    void** array = new void*[_capacity];
+    for(int i = 0; i < _size; i++)
         array[i] = _array[i];
     delete[] _array;
     _array = array;

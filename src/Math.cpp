@@ -111,52 +111,52 @@ double Math::atan2(double y, double x)
     return ::atan2(y, x);
 }
 
-void Math::set3(float* v, float* out)
+void Math::set3(const float* v, float* out)
 {
     out[0] = v[0];
     out[1] = v[1];
     out[2] = v[2];
 }
 
-float Math::dot3(float* a, float* b)
+float Math::dot3(const float* a, const float* b)
 {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
 
-void Math::mul3(float scalar, float* v, float* out)
+void Math::mul3(float scalar, const float* v, float* out)
 {
     out[0] = scalar * v[0];
     out[1] = scalar * v[1];
     out[2] = scalar * v[2];
 }
 
-void Math::mulv3(float* a, float* b, float* out)
+void Math::mulv3(const float* a, const float* b, float* out)
 {
     out[0] = a[0] * b[0];
     out[1] = a[1] * b[1];
     out[2] = a[2] * b[2];
 }
 
-void Math::add3(float* a, float* b, float* out)
+void Math::add3(const float* a, const float* b, float* out)
 {
     out[0] = a[0] + b[0];
     out[1] = a[1] + b[1];
     out[2] = a[2] + b[2];
 }
 
-void Math::sub3(float* a, float* b, float* out)
+void Math::sub3(const float* a, const float* b, float* out)
 {
     out[0] = a[0] - b[0];
     out[1] = a[1] - b[1];
     out[2] = a[2] - b[2];
 }
 
-float Math::mag3(float* v)
+float Math::mag3(const float* v)
 {
     return sqrt(dot3(v, v));
 }
 
-void Math::unit3(float* v, float* out)
+void Math::unit3(const float* v, float* out)
 {
     float mag = mag3(v);
     if(mag <= 1e-12f) {
@@ -169,7 +169,7 @@ void Math::unit3(float* v, float* out)
     mul3(1.0f / mag, v, out);
 }
 
-void Math::cross3(float* a, float* b, float* out)
+void Math::cross3(const float* a, const float* b, float* out)
 {
     float ax=a[0], ay=a[1], az=a[2];
     float bx=b[0], by=b[1], bz=b[2];
@@ -178,7 +178,7 @@ void Math::cross3(float* a, float* b, float* out)
     out[2] = ax*by - bx*ay;
 }
 
-void Math::mmul33(float* a, float* b, float* out)
+void Math::mmul33(const float* a, const float* b, float* out)
 {
     float tmp[9];
     tmp[0] = a[0]*b[0] + a[1]*b[3] + a[2]*b[6];
@@ -198,7 +198,7 @@ void Math::mmul33(float* a, float* b, float* out)
 	out[i] = tmp[i];
 }
 
-void Math::vmul33(float* m, float* v, float* out)
+void Math::vmul33(const float* m, const float* v, float* out)
 {
     float x = v[0], y = v[1], z = v[2];
     out[0] = x*m[0] + y*m[1] + z*m[2];
@@ -206,7 +206,7 @@ void Math::vmul33(float* m, float* v, float* out)
     out[2] = x*m[6] + y*m[7] + z*m[8];
 }
 
-void Math::tmul33(float* m, float* v, float* out)
+void Math::tmul33(const float* m, const float* v, float* out)
 {
     float x = v[0], y = v[1], z = v[2];
     out[0] = x*m[0] + y*m[3] + z*m[6];
@@ -214,7 +214,7 @@ void Math::tmul33(float* m, float* v, float* out)
     out[2] = x*m[2] + y*m[5] + z*m[8];
 }
 
-void Math::invert33(float* m, float* out)
+void Math::invert33(const float* m, float* out)
 {
     // Compute the inverse as the adjoint matrix times 1/(det M).
     // A, B ... I are the cofactors of a b c
@@ -241,7 +241,7 @@ void Math::invert33(float* m, float* out)
     out[6] = id*C; out[7] = id*F; out[8] = id*I;     
 }
 
-void Math::trans33(float* m, float* out)
+void Math::trans33(const float* m, float* out)
 {
     // 0 1 2   Elements 0, 4, and 8 are the same
     // 3 4 5   Swap elements 1/3, 2/6, and 5/7
@@ -263,7 +263,7 @@ void Math::trans33(float* m, float* out)
     out[7] = tmp;
 }
 
-void Math::ortho33(float* x, float* y,
+void Math::ortho33(const float* x, const float* y,
                    float* xOut, float* yOut, float* zOut)
 {
     float x0[3], y0[3];

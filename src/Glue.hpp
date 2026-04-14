@@ -10,11 +10,11 @@ namespace yasim {
 // out the middle of the western hemisphere.
 class Glue {
 public:
-    static void calcAlphaBeta(State* s, float* wind, float* alpha, float* beta);
+    static void calcAlphaBeta(const State* s, const float* wind, float* alpha, float* beta);
 
     // Calculates the instantaneous rotation velocities about each
     // axis.
-    static void calcEulerRates(State* s,
+    static void calcEulerRates(const State* s,
 			       float* roll, float* pitch, float* hdg);
 
     // Returns a global to "local" (north, east, down) matrix.  Note
@@ -29,7 +29,7 @@ public:
                              float* roll, float* pitch, float* hdg);
 
     static void geodUp(double lat, double lon, float* up);
-    static void geodUp(double* pos, float* up);
+    static void geodUp(const double* pos, float* up);
 };
 
 }; // namespace yasim

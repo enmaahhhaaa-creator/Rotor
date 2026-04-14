@@ -44,10 +44,10 @@ public:
     ~Rotor();
 
     // Rotor geometry:
-    void setNormal(float* normal);
+    void setNormal(const float* normal);
     //the normal vector (direction of rotormast, pointing up)
 
-    void setForward(float* forward);
+    void setForward(const float* forward);
     //the normal vector pointing forward (for ele and ail)
     void setForceAtPitchA(float force);
     void setPowerAtPitch0(float value);
@@ -86,7 +86,7 @@ public:
     void setRPM(float value);
     void setPhiNull(float value);
     void setRelLenHinge(float value);
-    void setBase(float* base);        // in local coordinates
+    void setBase(const float* base);        // in local coordinates
     void getPosition(float* out);
     void setCyclicail(float lval,float rval);
     void setCyclicele(float lval,float rval);
@@ -104,8 +104,8 @@ public:
     void compile();
     void updateDirectionsAndPositions(float *rot);
     void getTip(float* tip);
-    void calcLiftFactor(float* v, float rho, State *s);
-    void getDownWash(float *pos, float * v_heli, float *downwash);
+    void calcLiftFactor(const float* v, float rho, const State *s);
+    void getDownWash(const float *pos, float * v_heli, float *downwash);
     int getNumberOfBlades(){return _number_of_blades;}
     void setDownwashFactor(float value);
 
@@ -137,7 +137,7 @@ public:
         {if (_stall_v2sum !=0 ) return _stall_sum/_stall_v2sum; else return 0;}
     float getAirfoilIncidenceNoLift() {return _airfoil_incidence_no_lift;}
     Vector _rotorparts;
-    void findGroundEffectAltitude(Ground * ground_cb,State *s);
+    void findGroundEffectAltitude(Ground * ground_cb, const State *s);
     float *getGravDirection() {return _grav_direction;}
     void writeInfo();
     void setSharedFlapHinge(bool s);
@@ -146,12 +146,12 @@ public:
     void setGroundEffectAltitude(float altitude) { _ground_effect_altitude = altitude; }
 
 private:
-    void testForRotorGroundContact (Ground * ground_cb,State *s);
+    void testForRotorGroundContact (Ground * ground_cb, const State *s);
     void strncpy(char *dest,const char *src,int maxlen);
     void interp(float* v1, float* v2, float frac, float* out);
     float calcStall(float incidence,float speed);
-    float findGroundEffectAltitude(Ground * ground_cb,State *s,
-        float *pos0,float *pos1,float *pos2,float *pos3,
+    float findGroundEffectAltitude(Ground * ground_cb, const State *s,
+        const float *pos0,const float *pos1,const float *pos2,const float *pos3,
         int iteration=0,float a0=-1,float a1=-1,float a2=-1,float a3=-1);
     static void euler2orient(float roll, float pitch, float hdg,
                              float* out);
@@ -287,7 +287,7 @@ public:
     float getEnginePropFactor() {return _engine_prop_factor;}
     Vector* getRotors() { return &_rotors;}
     void initRotorIteration(float *lrot,float dt);
-    void getDownWash(float *pos, float * v_heli, float *downwash);
+    void getDownWash(const float *pos, float * v_heli, float *downwash);
     int getValueforFGSet(int j,char *b,float *f);
     float getTotalTorqueOnEngine() const { return _total_torque_on_engine; }
 };

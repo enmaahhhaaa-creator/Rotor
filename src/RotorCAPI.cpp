@@ -232,7 +232,9 @@ bool ValidateGearConfig(const RotorGearConfig& config)
     if(config.max_power_engine_kw < 0.0f
         || AbsFloat(config.engine_prop_factor) <= 1e-6f
         || config.max_power_rotor_brake_kw < 0.0f
-        || config.rotorgear_friction_kw < 0.0f) {
+        || config.rotorgear_friction_kw < 0.0f
+        || config.engine_accel_limit <= 0.0f
+        || config.initial_rel_rpm < 0.0f) {
         return false;
     }
 
@@ -508,6 +510,7 @@ void ToCpp(const RotorStepInput& c_in, rotor::RotorInstanceInput& cpp_out)
     cpp_out.rotor_brake = c_in.rotor_brake;
     cpp_out.max_rel_torque = c_in.max_rel_torque;
     cpp_out.rel_target = c_in.rel_target;
+    cpp_out.ground_provider = 0;
 }
 
 void ToC(const rotor::RotorTransmissionOutput& cpp_in, RotorTransmissionOutput& c_out)
@@ -687,7 +690,7 @@ int Rotor_SetControl(RotorContext* context, int rotor_idx, const RotorControlInp
 
 int Rotor_ResetTransmission(RotorContext* context, int transmission_idx, float initial_rel_rpm)
 {
-    if(context == 0 || !IsFiniteFloat(initial_rel_rpm)) {
+    if(context == 0 || !IsFiniteFloat(initial_rel_rpm) || initial_rel_rpm < 0.0f) {
         return 0;
     }
     return context->impl.manager.ResetTransmission(transmission_idx, initial_rel_rpm) ? 1 : 0;

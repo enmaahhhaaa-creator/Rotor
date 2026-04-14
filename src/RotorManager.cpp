@@ -156,6 +156,9 @@ public:
         if(transmission_idx < 0 || (std::size_t)transmission_idx >= transmissions.size()) {
             return false;
         }
+        if(initial_rel_rpm < 0.0f) {
+            return false;
+        }
 
         TransmissionSlot& transmission = *transmissions[transmission_idx];
         transmission.initial_rel_rpm = initial_rel_rpm;
@@ -280,6 +283,9 @@ bool RotorManager::SetRotorControl(int rotor_idx, const RotorControlInput& contr
 bool RotorManager::ResetTransmission(int transmission_idx, float initial_rel_rpm)
 {
     if(transmission_idx < 0 || (std::size_t)transmission_idx >= _impl->transmissions.size()) {
+        return false;
+    }
+    if(initial_rel_rpm < 0.0f) {
         return false;
     }
 
