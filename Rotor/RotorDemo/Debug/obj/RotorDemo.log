@@ -1,0 +1,5 @@
+﻿  main.c
+c:\users\23697\desktop\rotor-master\rotordemo\main.c(14): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\string.h(188) : 参见“strncpy”的声明
+  LINK : 没有找到 C:\Users\23697\Desktop\Rotor-master\RotorDemo\Debug\RotorDemo.exe 或上一个增量链接没有生成它；正在执行完全链接
+  RotorDemo.vcxproj -> C:\Users\23697\Desktop\Rotor-master\RotorDemo\Debug\RotorDemo.exe

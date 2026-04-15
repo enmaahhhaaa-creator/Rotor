@@ -1,0 +1,118 @@
+﻿  RotorSystem.cpp
+  Rotorpart.cpp
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(12): warning C4305: “初始化”: 从“double”到“const float”截断
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(37): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(38): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(39): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(63): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(68): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(103): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(105): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(118): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(146): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(265): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(387): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(395): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(398): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(400): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(442): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(449): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(452): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(457): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(475): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(482): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(494): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(501): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(535): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(579): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotorpart.cpp(590): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
+  Rotor.cpp
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(24): warning C4305: “初始化”: 从“double”到“const float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(31): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(33): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(34): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(53): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(54): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(55): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(57): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(58): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(59): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(76): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(77): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(79): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(82): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(83): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(86): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(87): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(88): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(89): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(97): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(98): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(99): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(103): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(106): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(117): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(118): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(119): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(120): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(132): warning C4305: “=”: 从“double”到“float”截断
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(198): warning C4244: “-=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(208): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(264): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(274): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(283): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(292): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(298): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(303): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(308): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(313): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(318): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(323): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(336): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(706): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(707): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(708): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(712): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(714): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(715): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(717): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(855): warning C4244: “-=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(920): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(951): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(961): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(971): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1009): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1017): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1089): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1090): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1096): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1108): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1110): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1111): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1158): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1169): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1173): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1175): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1178): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1471): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1647): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\23697\desktop\rotor-master\src\rotor.cpp(1657): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 参见“sprintf”的声明
+  RotorManager.cpp
+  RotorCAPI.cpp
+  Math.cpp
+  Ground.cpp
+  Glue.cpp
+  正在生成代码...
+  RotorLib.vcxproj -> C:\Users\23697\Desktop\Rotor-master\RotorLib\Debug\RotorLib.lib

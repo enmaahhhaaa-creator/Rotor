@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "RotorDemo", "RotorDemo\RotorDemo.vcxproj", "{D4A1C145-3C6B-4DA7-8E0A-0F5D7A35D6F1}"
+EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "RotorLib", "RotorLib\RotorLib.vcxproj", "{9EAFDE48-6505-4E86-BB42-1B06D16D2DA1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4A1C145-3C6B-4DA7-8E0A-0F5D7A35D6F1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D4A1C145-3C6B-4DA7-8E0A-0F5D7A35D6F1}.Debug|Win32.Build.0 = Debug|Win32
+		{D4A1C145-3C6B-4DA7-8E0A-0F5D7A35D6F1}.Release|Win32.ActiveCfg = Release|Win32
+		{D4A1C145-3C6B-4DA7-8E0A-0F5D7A35D6F1}.Release|Win32.Build.0 = Release|Win32
+		{9EAFDE48-6505-4E86-BB42-1B06D16D2DA1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9EAFDE48-6505-4E86-BB42-1B06D16D2DA1}.Debug|Win32.Build.0 = Debug|Win32
+		{9EAFDE48-6505-4E86-BB42-1B06D16D2DA1}.Release|Win32.ActiveCfg = Release|Win32
+		{9EAFDE48-6505-4E86-BB42-1B06D16D2DA1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
